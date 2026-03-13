@@ -1,0 +1,29 @@
+.venv
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Dist
+build/
+dist/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Output
+*.json
+samples/
