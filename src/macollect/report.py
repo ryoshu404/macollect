@@ -1,9 +1,15 @@
 from datetime import datetime
 import os
+import importlib.metadata
+
+try:
+    VERSION = importlib.metadata.version('macollect')
+except importlib.metadata.PackageNotFoundError:
+    VERSION = 'unknown'
 
 class ReportBuilder:
     
-    def build(self, results: dict, VERSION) -> dict:
+    def build(self, results: dict) -> dict:
 
         report = {}
         baseline_data = results.get('baseline', {}).get('data', {})

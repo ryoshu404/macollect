@@ -3,7 +3,7 @@ import importlib.metadata
 import os
 import sys
 from pathlib import Path
-from macollect.pipeline import PLACEHOLDER
+from macollect.pipeline import MacollectPipeline
 from macollect.formatters.json_formatter import format_json
 
 try:
@@ -27,6 +27,7 @@ def parse_args() -> argparse.Namespace:
                         'unified logs')
     parser.add_argument('-o', '--output', type=str, help='Specify output location')
     parser.add_argument('-v', '--version', action='version', version=f'macollect {VERSION}')
+    return parser.parse_args()
 
 def main():
 
@@ -34,8 +35,8 @@ def main():
     if os.geteuid() != 0:
         print('macollect requires sudo. Run with: sudo macollect', file=sys.stderr)
         sys.exit(1)
-    pipeline = PLACEHOLDER(modules=args.modules, time_window=args.time_window)
-    report = pipeline.PLACEHOLDERUN()
+    pipeline = MacollectPipeline(modules=args.modules, time_window=args.time_window)
+    report = pipeline.run()
     match args.format:
         case 'json':
             formatted = format_json(report)

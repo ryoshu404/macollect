@@ -18,7 +18,7 @@ class MacollectPipeline:
         self.modules = modules
         self.time_window = time_window
 
-    def run(self, VERSION) -> dict:
+    def run(self) -> dict:
         results = {}
         if not self.modules:
             self.modules = ['baseline',] #'persistence', 'processes', 'signing', 'tcc',
@@ -28,5 +28,5 @@ class MacollectPipeline:
             module = module_class()
             results[name] = module.collect()
         report_builder = ReportBuilder()
-        report = report_builder.build(results, VERSION)
+        report = report_builder.build(results)
         return report
