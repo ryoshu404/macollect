@@ -19,6 +19,7 @@ class MacollectPipeline:
         self.time_window = time_window
 
     def run(self) -> dict:
+        errors = []
         results = {}
         if not self.modules:
             self.modules = ['baseline',] #'persistence', 'processes', 'signing', 'tcc',
@@ -26,7 +27,12 @@ class MacollectPipeline:
         for name in self.modules:
             module_class = self.registry[name]
             module = module_class()
-            results[name] = module.collect()
+            try:
+                results[name] = module.collect()
+            except Exception as e:
+                results[name] = {'data': {}, 'flags': []}
+                errors.append(f'{name}: {str(e)}')
+        results['errors'] = errors
         report_builder = ReportBuilder()
         report = report_builder.build(results)
         return report
