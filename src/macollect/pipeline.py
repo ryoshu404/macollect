@@ -1,5 +1,6 @@
 from macollect.report import ReportBuilder
 from macollect.modules.system_baseline import SystemBaseline
+from macollect.modules.persistence import Persistence
 
 class MacollectPipeline:
     
@@ -7,7 +8,7 @@ class MacollectPipeline:
         
         self.registry = {
             'baseline': SystemBaseline,
-            # 'persistence': Persistence,
+            'persistence': Persistence,
             # 'processes': ProcessSnapshot,
             # 'signing': CodeSigning,
             # 'tcc': TCCDatabases,
@@ -22,7 +23,7 @@ class MacollectPipeline:
         errors = []
         results = {}
         if not self.modules:
-            self.modules = ['baseline',] #'persistence', 'processes', 'signing', 'tcc',
+            self.modules = ['baseline', 'persistence']#, 'processes', 'signing', 'tcc',
                 #'xattr', 'credentials','logs']
         for name in self.modules:
             module_class = self.registry[name]
