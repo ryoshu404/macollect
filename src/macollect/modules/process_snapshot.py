@@ -108,6 +108,9 @@ class ProcessSnapshot():
                         argv = shlex.split(args_str)
                     except ValueError:
                         argv = args_str.split()
+                    # NOTE: shlex.split() truncates binary_path at first space for processes
+                    # with unquoted spaces in path (e.g. Image Capture, Screen Sharing).
+                    # Full fix requires proc_pidpath via ctypes. Tracked: GitHub issue #3
                     binary_path = argv[0] if argv else ''
                     entry = {
                         'pid':              int(fields[0].strip()),
