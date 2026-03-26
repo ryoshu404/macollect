@@ -14,8 +14,11 @@ class ReportBuilder:
         report = {}
         baseline_data = results.get('baseline', {}).get('data', {})
         persistence_data = results.get('persistence', {}).get('data', {})
+        persistence_flags = results.get('persistence', {}).get('flags', [])
         process_data = results.get('processes', {}).get('data', {})
+        process_flags = results.get('processes', {}).get('flags', [])
         signing_data = results.get('signing', {}).get('data', {})
+        signing_flags = results.get('signing', {}).get('flags', [])
         tcc_data = results.get('tcc', {}).get('data', {})
         xattr_data = results.get('xattr', {}).get('data', {})
         credentials_data = results.get('credentials', {}).get('data', {})
@@ -35,15 +38,15 @@ class ReportBuilder:
             },
             'persistence': {
                 'data': persistence_data,
-                'flags': []
+                'flags': persistence_flags
             },
             'process_snapshot': {
                 'data': process_data,
-                'flags': []
+                'flags': process_flags
             },
             'code_signing': {
                 'data': signing_data,
-                'flags': []
+                'flags': signing_flags
             },
             'tcc_databases': {
                 'data': tcc_data,

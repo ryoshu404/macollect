@@ -16,15 +16,61 @@ class Persistence():
         persistence['shell_configs'] = self._collect_shell_configs() or {}
         persistence['sudoers'] = self._collect_sudoers() or {}
         persistence['cron'] = self._collect_cron() or {}
-        flags = self._evaluate_flag(persistence) or {}
+        flags = self._evaluate_flag(persistence)
         return {
             'data': persistence,
             'flags': flags
             }
     
-    def _evaluate_flag(self, data: dict) -> list:
-        pass
-    
+    def _evaluate_flag(self, persistence: dict) -> list:
+        flags = []
+        for entry in persistence['launch_daemons'] + persistence['launch_agents']:
+            if entry['program'] and entry['program'].startswith(('/tmp', '/var/tmp', '/Users/')):
+                flags.append({
+                    'type': 'writable_path',
+                    'source': entry['source'],
+                    'detail': entry['program'],
+                    'reason': 'Persistence method runs from a writable location'
+                })
+            if entry['program'] and entry['program'].startswith('.'):
+                flags.append({
+                    'type' : 'hidden_file',
+                    'source': entry['source'],
+                    'detail': entry['program'],
+                    'reason': 'Program key pointing to hidden file'
+                })
+            for arg in entry['program_arguments']:
+                if arg.startswith(('/tmp', '/var/tmp', '/Users/')):
+                    flags.append({
+                        'type' : 'writable_path',
+                        'source' : entry['source'],
+                        'detail' : arg,
+                        'reason' : 'Persistence method runs from a writable location',
+                    })
+            if not entry['label']:
+                flags.append({
+                    'type' : 'empty_label',
+                    'source' : entry['source'],
+                    'reason' :  'Missing or empty label field in plist'
+                })
+        for source, content in persistence['sudoers'].items():
+            for line in content.split('\n'):
+                if 'NOPASSWD' in line and not line.strip().startswith('#'):
+                    flags.append({
+                        'type' : 'sudoers_unexpected_entry',
+                        'source' : source,
+                        'detail' : line,
+                        'reason' : 'NOPASSWD entry in sudoers'
+                    })
+        if persistence['loginwindow'].get('auto_login_user'):
+            flags.append({
+                'type': 'autologin_enabled',
+                'source': '/Library/Preferences/com.apple.loginwindow.plist',
+                'detail': persistence['loginwindow']['auto_login_user'],
+                'reason': 'Autologin is enabled'
+            })
+        return flags
+        
     def _collect_btm(self) -> str:
         try:
             btm = subprocess.run(['sfltool', 'dumpbtm'], 
