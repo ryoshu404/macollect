@@ -3,6 +3,7 @@ from macollect.modules.system_baseline import SystemBaseline
 from macollect.modules.persistence import Persistence
 from macollect.modules.process_snapshot import ProcessSnapshot
 from macollect.modules.code_signing import CodeSigning
+from macollect.modules.tcc_databases import TCCDatabases
 
 class MacollectPipeline:
     
@@ -13,7 +14,7 @@ class MacollectPipeline:
             'persistence': Persistence,
              'processes': ProcessSnapshot,
              'signing': CodeSigning,
-            # 'tcc': TCCDatabases,
+             'tcc': TCCDatabases,
             # 'xattr': ExtendedAttributes,
             # 'credentials': CredentialArtifacts,
             # 'logs': UnifiedLog
@@ -25,7 +26,7 @@ class MacollectPipeline:
         errors = []
         results = {}
         if not self.modules:
-            self.modules = ['baseline', 'persistence', 'processes', 'signing']#, 'tcc',
+            self.modules = ['baseline', 'persistence', 'processes', 'signing', 'tcc',]
                 #'xattr', 'credentials','logs']
         modules_to_run = self._resolve_modules(self.modules)
         for name in modules_to_run:
