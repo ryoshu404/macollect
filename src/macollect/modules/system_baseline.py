@@ -5,6 +5,8 @@ import re
 
 class SystemBaseline():
 
+    depends_on = []
+
     def collect(self) -> dict:
         baseline = {}
         baseline['hostname'] = gethostname()

@@ -6,6 +6,8 @@ from pathlib import Path
 
 class ProcessSnapshot():
 
+    depends_on = []
+
     def collect(self) -> dict:
         processes = self._collect_processes()
         flags = self._evaluate_flags(processes)
