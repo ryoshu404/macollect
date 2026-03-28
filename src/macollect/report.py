@@ -20,6 +20,7 @@ class ReportBuilder:
         signing_data = results.get('signing', {}).get('data', {})
         signing_flags = results.get('signing', {}).get('flags', [])
         tcc_data = results.get('tcc', {}).get('data', {})
+        tcc_flags = results.get('tcc', {}).get('flags', {})
         xattr_data = results.get('xattr', {}).get('data', {})
         credentials_data = results.get('credentials', {}).get('data', {})
         logs_data = results.get('logs', {}).get('data', {})
@@ -50,7 +51,7 @@ class ReportBuilder:
             },
             'tcc_databases': {
                 'data': tcc_data,
-                'flags': []
+                'flags': tcc_flags
             },
             'extended_attributes': {
                 'data': xattr_data,
