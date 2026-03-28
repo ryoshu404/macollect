@@ -5,6 +5,8 @@ import itertools
 
 
 class Persistence():
+
+    depends_on = []
     
     def collect(self) -> dict:
         persistence = {}
@@ -51,6 +53,7 @@ class Persistence():
                 flags.append({
                     'type' : 'empty_label',
                     'source' : entry['source'],
+                    'detail' : '',
                     'reason' :  'Missing or empty label field in plist'
                 })
         for source, content in persistence['sudoers'].items():
