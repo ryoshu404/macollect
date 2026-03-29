@@ -5,6 +5,7 @@ from macollect.modules.process_snapshot import ProcessSnapshot
 from macollect.modules.code_signing import CodeSigning
 from macollect.modules.tcc_databases import TCCDatabases
 from macollect.modules.extended_attributes import ExtendedAttributes
+from macollect.modules.credential_artifacts import CredentialArtifacts
 
 
 class MacollectPipeline:
@@ -17,7 +18,7 @@ class MacollectPipeline:
             'signing':     CodeSigning,
             'tcc':         TCCDatabases,
             'xattr':       ExtendedAttributes,
-            # 'credentials': CredentialArtifacts,
+            'credentials': CredentialArtifacts,
             # 'logs':        UnifiedLog
             }
         self.modules = modules
@@ -27,8 +28,8 @@ class MacollectPipeline:
         errors = []
         results = {}
         if not self.modules:
-            self.modules = ['baseline', 'persistence', 'processes', 'signing', 'tcc', 'xattr',]
-                            #credentials, logs]
+            self.modules = ['baseline', 'persistence', 'processes', 'signing', 'tcc', 'xattr',
+                            'credentials',] #'logs']
         modules_to_run = self._resolve_modules(self.modules)
         for name in modules_to_run:
             module_class = self.registry[name]
