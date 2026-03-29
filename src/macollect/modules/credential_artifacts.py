@@ -108,6 +108,7 @@ class CredentialArtifacts():
                     keychains[str(path)] = {'error': 'stat failed'}
         return keychains
 
+    # identical to persistence._read_text_file, intentional, no shared utils module
     def _read_text_file(self, path: Path) -> tuple:
         try:
             with open(path, 'r') as f:

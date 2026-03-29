@@ -33,13 +33,11 @@ class UnifiedLog():
             result = subprocess.run(
                     ['log', 'show',
                     '--predicate', f'subsystem == "{subsystem}"',
-                    '--last', f'{self.time_window}h',
-                    '--level', 
-                    'error'
+                    '--last', f'{self.time_window}h'
                     ],
                 capture_output=True, text=True, timeout=60
                 )
-            lines = [l for l in result.stdout.splitlines() if l.strip()]
+            lines = [line for line in result.stdout.splitlines() if line.strip()]
             # first line is always the log header, skip it
             entries = lines[1:] if len(lines) > 1 else []
             return {

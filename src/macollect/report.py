@@ -8,7 +8,7 @@ except importlib.metadata.PackageNotFoundError:
     VERSION = 'unknown'
 
 class ReportBuilder:
-    
+
     def build(self, results: dict) -> dict:
 
         report = {}
@@ -69,6 +69,6 @@ class ReportBuilder:
                 'flags': []
             }
         }
-        report['errors'] = []
+        report['errors'] = results.get('errors', [])
 
         return report
