@@ -7,6 +7,7 @@ from pathlib import Path
 class ProcessSnapshot():
 
     depends_on = []
+    inject = {}
 
     def collect(self) -> dict:
         processes = self._collect_processes()

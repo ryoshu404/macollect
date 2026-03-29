@@ -6,6 +6,7 @@ import re
 class SystemBaseline():
 
     depends_on = []
+    inject = {}
 
     def collect(self) -> dict:
         baseline = {}

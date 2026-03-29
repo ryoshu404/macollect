@@ -7,6 +7,7 @@ import itertools
 class Persistence():
 
     depends_on = []
+    inject = {}
     
     def collect(self) -> dict:
         persistence = {}
@@ -101,7 +102,8 @@ class Persistence():
                     entry['run_at_load'] = content.get('RunAtLoad', False)
                     entry['keep_alive'] = content.get('KeepAlive', False)
                     entry['username'] = content.get('UserName', '')
-                    entry['disabled'] = content.get('Disabled', False)
+                    disabled = content.get('Disabled', False)
+                    entry['disabled'] = bool(disabled) if isinstance(disabled, dict) else disabled
                     entry['environment_variables'] = content.get('EnvironmentVariables', {})
                     # Skip configuration-only plists (no Label or Program — e.g. jetsam memory config)
                     if not entry['label'] and not entry['program'] and not entry['program_arguments']:
@@ -137,7 +139,8 @@ class Persistence():
                     entry['run_at_load'] = content.get('RunAtLoad', False)
                     entry['keep_alive'] = content.get('KeepAlive', False)
                     entry['username'] = user
-                    entry['disabled'] = content.get('Disabled', False)
+                    disabled = content.get('Disabled', False)
+                    entry['disabled'] = bool(disabled) if isinstance(disabled, dict) else disabled
                     entry['environment_variables'] = content.get('EnvironmentVariables', {})
                     # Skip configuration-only plists (no Label or Program — e.g. jetsam memory config)
                     if not entry['label'] and not entry['program'] and not entry['program_arguments']:
