@@ -26,17 +26,17 @@ class CodeSigning():
                 binaries.append(entry['source'])
         self.binaries = list(set(binaries))
 
-def collect(self) -> dict:
-    signing = [
-        entry for entry in
-        (self._check_codesign(b) for b in self.binaries)
-        if entry is not None
-        ]
-    flags = self._evaluate_flags(signing)
-    return {
-        'data': {'signing': signing},
-        'flags': flags
-        }
+    def collect(self) -> dict:
+        signing = [
+            entry for entry in
+            (self._check_codesign(b) for b in self.binaries)
+            if entry is not None
+            ]
+        flags = self._evaluate_flags(signing)
+        return {
+            'data': {'signing': signing},
+            'flags': flags
+            }
 
     def _evaluate_flags(self, signing: list) -> list:
         flags = []
