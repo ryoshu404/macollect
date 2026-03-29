@@ -26,6 +26,7 @@ class ReportBuilder:
         credentials_data = results.get('credentials', {}).get('data', {})
         credentials_flags = results.get('credentials', {}).get('flags', [])
         logs_data = results.get('logs', {}).get('data', {})
+        logs_flags = results.get('logs', {}).get('flags', [])
         report['collection_metadata'] = {
             'macollect_version': VERSION,
             'collected_at': datetime.now().isoformat(),

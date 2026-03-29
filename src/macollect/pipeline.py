@@ -6,6 +6,7 @@ from macollect.modules.code_signing import CodeSigning
 from macollect.modules.tcc_databases import TCCDatabases
 from macollect.modules.extended_attributes import ExtendedAttributes
 from macollect.modules.credential_artifacts import CredentialArtifacts
+from macollect.modules.unified_log import UnifiedLog
 
 
 class MacollectPipeline:
@@ -19,7 +20,7 @@ class MacollectPipeline:
             'tcc':         TCCDatabases,
             'xattr':       ExtendedAttributes,
             'credentials': CredentialArtifacts,
-            # 'logs':        UnifiedLog
+             'logs':        UnifiedLog
             }
         self.modules = modules
         self.time_window = time_window
@@ -29,11 +30,13 @@ class MacollectPipeline:
         results = {}
         if not self.modules:
             self.modules = ['baseline', 'persistence', 'processes', 'signing', 'tcc', 'xattr',
-                            'credentials',] #'logs']
+                            'credentials', 'logs']
         modules_to_run = self._resolve_modules(self.modules)
         for name in modules_to_run:
             module_class = self.registry[name]
             kwargs = self._build_kwargs(module_class, results)
+            if name == 'logs':
+                kwargs['time_window'] = self.time_window
             module = module_class(**kwargs)
             try:
                 results[name] = module.collect()
