@@ -20,8 +20,9 @@ class ReportBuilder:
         signing_data = results.get('signing', {}).get('data', {})
         signing_flags = results.get('signing', {}).get('flags', [])
         tcc_data = results.get('tcc', {}).get('data', {})
-        tcc_flags = results.get('tcc', {}).get('flags', {})
+        tcc_flags = results.get('tcc', {}).get('flags', [])
         xattr_data = results.get('xattr', {}).get('data', {})
+        xattr_flags = results.get('xattr', {}).get('flags', [])
         credentials_data = results.get('credentials', {}).get('data', {})
         logs_data = results.get('logs', {}).get('data', {})
         report['collection_metadata'] = {
@@ -55,7 +56,7 @@ class ReportBuilder:
             },
             'extended_attributes': {
                 'data': xattr_data,
-                'flags': []
+                'flags': xattr_flags
             },
             'credential_artifacts': {
                 'data': credentials_data,

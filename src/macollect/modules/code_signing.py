@@ -2,12 +2,29 @@ import subprocess
 import re
 from pathlib import Path
 
+
 class CodeSigning():
 
     depends_on = ['persistence', 'processes']
+    inject = {
+        'persistence_data': ('persistence', 'data'),
+        'process_flags':    ('processes', 'flags'),
+        }
 
-    def __init__(self, binaries: list):
-        self.binaries = binaries
+    def __init__(self, persistence_data: dict = None, process_flags: list = None):
+        persistence_data = persistence_data or {}
+        process_flags = process_flags or []
+        binaries = []
+        for entry in persistence_data.get('launch_daemons', []) + persistence_data.get('launch_agents', []):
+            if isinstance(entry, dict):
+                if entry.get('program'):
+                    binaries.append(entry['program'])
+                elif entry.get('program_arguments'):
+                    binaries.append(entry['program_arguments'][0])
+        for entry in process_flags:
+            if entry.get('source'):
+                binaries.append(entry['source'])
+        self.binaries = list(set(binaries))
 
     def collect(self) -> dict:
         signing = []
@@ -18,15 +35,12 @@ class CodeSigning():
         return {
             'data': {'signing': signing},
             'flags': flags
-        }
+            }
 
     def _evaluate_flags(self, signing: list) -> list:
         flags = []
         trusted_prefixes = ('/usr/', '/System/', '/sbin/', '/bin/')
         for entry in signing:
-            #initially, wanted to flag when signing identity does not match
-            #expected developer for known application name, but decided outside
-            #of v1 scope due to having to build and maintain a known_ids dict
             if entry['signing_status'] in ['unsigned', 'adhoc']:
                 if entry['signing_status'] == 'unsigned':
                     if entry['path'].startswith(trusted_prefixes):
@@ -42,8 +56,6 @@ class CodeSigning():
                     })
         return flags
 
-
-
     def _check_codesign(self, path: str) -> dict:
         signing = {
             'path': path,
@@ -54,7 +66,7 @@ class CodeSigning():
             'codesign_flags': '',
             'notarization_ticket': False,
             'signing_status': '',
-        }
+            }
         try:
             result = subprocess.run(
                 ['codesign', '-dvvv', path],
@@ -83,7 +95,6 @@ class CodeSigning():
         except Exception as e:
             signing['signing_status'] = f'error: {e}'
         return signing
-
 
     def _derive_signing_status(self, output: str) -> str:
         if 'code object is not signed at all' in output:

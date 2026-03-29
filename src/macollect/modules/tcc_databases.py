@@ -4,6 +4,7 @@ from pathlib import Path
 class TCCDatabases():
 
     depends_on = []
+    inject = {}
 
     def collect(self) -> dict:
         
