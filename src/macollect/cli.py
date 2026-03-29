@@ -19,8 +19,8 @@ def parse_args() -> argparse.Namespace:
         epilog='https://github.com/ryoshu404/macollect',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument('-m', '--modules', nargs='+', choices=['baseline', 'persistence', 
-        'processes', 'signing', 'tcc', 'xattr', 'credentials','logs'], default=None, 
+    parser.add_argument('-m', '--modules', nargs='+', choices=['baseline', 'persistence',
+        'processes', 'signing', 'tcc', 'xattr', 'credentials','logs'], default=None,
         help='--modules: baseline persistence processes signing tcc xattr credentials logs')
     parser.add_argument('-f', '--format', choices=['json'], default='json', help='Output format')
     parser.add_argument('-t', '--time-window', type=int, default=24, help='Time window for ' \
@@ -39,6 +39,8 @@ def main():
     report = pipeline.run()
     match args.format:
         case 'json':
+            formatted = format_json(report)
+        case _:
             formatted = format_json(report)
     if args.output:
         output = Path(args.output).expanduser()

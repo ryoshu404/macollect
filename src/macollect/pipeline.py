@@ -20,7 +20,7 @@ class MacollectPipeline:
             'tcc':         TCCDatabases,
             'xattr':       ExtendedAttributes,
             'credentials': CredentialArtifacts,
-             'logs':        UnifiedLog
+            'logs':        UnifiedLog
             }
         self.modules = modules
         self.time_window = time_window

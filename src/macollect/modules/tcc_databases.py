@@ -7,7 +7,7 @@ class TCCDatabases():
     inject = {}
 
     def collect(self) -> dict:
-        
+
         tcc = []
         system_db = Path('/Library/Application Support/com.apple.TCC/TCC.db')
         user_dbs = Path('/Users/').glob('*/Library/Application Support/com.apple.TCC/TCC.db')
@@ -23,7 +23,7 @@ class TCCDatabases():
             }
 
     def _parse_tcc(self, path: Path, scope: str) -> list:
-       
+
         tcc = []
         try:
             conn = sqlite3.connect(f'file:{path}?mode=ro', uri=True)
@@ -48,7 +48,7 @@ class TCCDatabases():
         return tcc
 
     def _evaluate_flags(self, tcc: list) -> list:
-       
+
         flags = []
         sensitive_services = {
             'kTCCServiceSystemPolicyAllFiles',

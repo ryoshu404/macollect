@@ -8,7 +8,7 @@ class Persistence():
 
     depends_on = []
     inject = {}
-    
+
     def collect(self) -> dict:
         persistence = {}
         persistence['btm'] = self._collect_btm() or ''
@@ -19,15 +19,17 @@ class Persistence():
         persistence['shell_configs'] = self._collect_shell_configs() or {}
         persistence['sudoers'] = self._collect_sudoers() or {}
         persistence['cron'] = self._collect_cron() or {}
-        flags = self._evaluate_flag(persistence)
+        flags = self._evaluate_flags(persistence)
         return {
             'data': persistence,
             'flags': flags
             }
-    
-    def _evaluate_flag(self, persistence: dict) -> list:
+
+    def _evaluate_flags(self, persistence: dict) -> list:
         flags = []
         for entry in persistence['launch_daemons'] + persistence['launch_agents']:
+            if not isinstance(entry, dict):
+                continue
             if entry['program'] and entry['program'].startswith(('/tmp', '/var/tmp', '/Users/')):
                 flags.append({
                     'type': 'writable_path',
@@ -35,36 +37,36 @@ class Persistence():
                     'detail': entry['program'],
                     'reason': 'Persistence method runs from a writable location'
                 })
-            if entry['program'] and entry['program'].startswith('.'):
+            if entry['program'] and Path(entry['program']).name.startswith('.'):
                 flags.append({
-                    'type' : 'hidden_file',
+                    'type': 'hidden_file',
                     'source': entry['source'],
                     'detail': entry['program'],
                     'reason': 'Program key pointing to hidden file'
                 })
-            for arg in entry['program_arguments']:
+            for arg in entry['program_arguments'][0]:
                 if arg.startswith(('/tmp', '/var/tmp', '/Users/')):
                     flags.append({
-                        'type' : 'writable_path',
-                        'source' : entry['source'],
-                        'detail' : arg,
-                        'reason' : 'Persistence method runs from a writable location',
+                        'type': 'writable_path',
+                        'source': entry['source'],
+                        'detail': arg,
+                        'reason': 'Persistence method runs from a writable location',
                     })
             if not entry['label']:
                 flags.append({
-                    'type' : 'empty_label',
-                    'source' : entry['source'],
-                    'detail' : '',
-                    'reason' :  'Missing or empty label field in plist'
+                    'type': 'empty_label',
+                    'source': entry['source'],
+                    'detail': '',
+                    'reason': 'Missing or empty label field in plist'
                 })
         for source, content in persistence['sudoers'].items():
             for line in content.split('\n'):
                 if 'NOPASSWD' in line and not line.strip().startswith('#'):
                     flags.append({
-                        'type' : 'sudoers_unexpected_entry',
-                        'source' : source,
-                        'detail' : line,
-                        'reason' : 'NOPASSWD entry in sudoers'
+                        'type': 'sudoers_unexpected_entry',
+                        'source': source,
+                        'detail': line,
+                        'reason': 'NOPASSWD entry in sudoers'
                     })
         if persistence['loginwindow'].get('auto_login_user'):
             flags.append({
@@ -74,10 +76,10 @@ class Persistence():
                 'reason': 'Autologin is enabled'
             })
         return flags
-        
+
     def _collect_btm(self) -> str:
         try:
-            btm = subprocess.run(['sfltool', 'dumpbtm'], 
+            btm = subprocess.run(['sfltool', 'dumpbtm'],
                 capture_output=True, text=True, timeout=10).stdout.strip()
         except subprocess.TimeoutExpired:
             btm = ''
@@ -159,7 +161,7 @@ class Persistence():
         for path in paths:
             login_items.append(str(path))
         return login_items
-    
+
     def _collect_loginwindow(self) -> dict:
         login_window = {}
         source = '/Library/Preferences/com.apple.loginwindow.plist'
@@ -175,7 +177,7 @@ class Persistence():
         except Exception as e:
             login_window['error'] = f'Error: {e}, for {source}'
         return login_window
-    
+
     def _collect_shell_configs(self) -> dict:
         shell_configs = {}
         users = Path('/Users/').glob('*/')
@@ -190,7 +192,7 @@ class Persistence():
         for path in system_configs:
             if path.exists():
                 entry, content = self._read_text_file(path)
-                shell_configs[entry] = content                  
+                shell_configs[entry] = content
         return shell_configs
 
     def _collect_sudoers(self) -> dict:
@@ -218,19 +220,19 @@ class Persistence():
                 entry, content = self._read_text_file(path)
                 collect_cron[entry] = content
         try:
-            atq = subprocess.run(['atq'], 
+            atq = subprocess.run(['atq'],
                 capture_output=True, text=True, timeout=10).stdout.strip()
         except subprocess.TimeoutExpired:
             atq = ''
         collect_cron['atq'] = atq
         return collect_cron
-    
-    def _read_text_file(self, path: Path) -> dict:
+
+    # identical to credential_artifacts._read_text_file, intentional, no shared utils module
+    def _read_text_file(self, path: Path) -> tuple:
         try:
             with open(path, 'r') as f:
-                content = f.read()
-                return str(path), content
+                return str(path), f.read()
         except PermissionError:
             return str(path), f'PermissionError for {path}'
         except Exception as e:
-            return str(path), f'Error: {e}, for {path}' 
+            return str(path), f'Error: {e}, for {path}'

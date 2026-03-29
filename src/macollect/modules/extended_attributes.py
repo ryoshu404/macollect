@@ -64,7 +64,11 @@ class ExtendedAttributes():
                 if 'com.apple.quarantine' in line and ':' in line:
                     entry['quarantine'] = line.split(':', 1)[-1].strip()
                 elif 'kMDItemWhereFroms' in line:
-                    entry['where_froms'] = line.split(':', 1)[-1].strip()
+                    where_result = subprocess.run(
+                        ['xattr', '-p', 'com.apple.metadata.kMDItemWhereFroms', path],
+                        capture_output=True, text=True, timeout=10
+                    )
+                    entry['where_froms'] = where_result.stdout.strip()
                 elif line and not line.startswith(' ') and ':' in line:
                     attr_name = line.split(':')[0].strip()
                     if attr_name not in (

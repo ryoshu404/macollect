@@ -34,12 +34,14 @@ class ProcessSnapshot():
                     })
             if entry['process_name'] and entry['comm']:
                 comm_name = Path(entry['comm']).name
-                if not entry['process_name'].startswith(comm_name):
-                    flags.append({
-                        'type': 'argv0_mismatch',
-                        'source': entry['binary_path'],
-                        'detail': f'pid={entry["pid"]} comm={entry["comm"]} argv0={entry["process_name"]}',
-                        'reason': 'Process name does not match argv[0] — possible masquerading'
+                process_name = Path(entry['process_name']).name
+                if comm_name != process_name:
+                    if not entry['binary_path'].startswith(('/usr/', '/System/', '/sbin/', '/bin/')):
+                        flags.append({
+                            'type': 'argv0_mismatch',
+                            'source': entry['binary_path'],
+                            'detail': f'pid={entry["pid"]} comm={entry["comm"]} argv0={entry["process_name"]}',
+                            'reason': 'Process name does not match argv[0] — possible masquerading'
                         })
             if entry['binary_path'] and entry['binary_path'].startswith(('/tmp', '/var/tmp', '/Users/')):
                 flags.append({
@@ -84,7 +86,6 @@ class ProcessSnapshot():
             return None
         except Exception:
             return None
-        return None
 
     def _collect_processes(self) -> list:
         processes = []
