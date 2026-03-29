@@ -42,7 +42,7 @@ class ProcessSnapshot():
                             'source': entry['binary_path'],
                             'detail': f'pid={entry["pid"]} comm={entry["comm"]} argv0={entry["process_name"]}',
                             'reason': 'Process name does not match argv[0] — possible masquerading'
-                        })
+                            })
             if entry['binary_path'] and entry['binary_path'].startswith(('/tmp', '/var/tmp', '/Users/')):
                 flags.append({
                     'type': 'writable_path',

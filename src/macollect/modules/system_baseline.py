@@ -24,7 +24,7 @@ class SystemBaseline():
                     'username': field[0],
                     'line': field[1],
                     'login_time': " ".join(field[2:5])
-                })
+                    })
             baseline['current_users'] = current_users
         except subprocess.TimeoutExpired:
             baseline['current_users'] = []
@@ -65,5 +65,5 @@ class SystemBaseline():
         return {
             'data': baseline,
             'flags': []
-        }
+            }
 

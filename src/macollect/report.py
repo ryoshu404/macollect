@@ -34,41 +34,41 @@ class ReportBuilder:
             'hostname': baseline_data.get('hostname', ''),
             'macos_version': baseline_data.get('macos_version', ''),
             'architecture': baseline_data.get('architecture', '')
-        }
+            }
         report['modules'] = {
             'system_baseline': {
                 'data': baseline_data,
                 'flags': []
-            },
+                },
             'persistence': {
                 'data': persistence_data,
                 'flags': persistence_flags
-            },
+                },
             'process_snapshot': {
                 'data': process_data,
                 'flags': process_flags
-            },
+                },
             'code_signing': {
                 'data': signing_data,
                 'flags': signing_flags
-            },
+                },
             'tcc_databases': {
                 'data': tcc_data,
                 'flags': tcc_flags
-            },
+                },
             'extended_attributes': {
                 'data': xattr_data,
                 'flags': xattr_flags
-            },
+                },
             'credential_artifacts': {
                 'data': credentials_data,
                 'flags': credentials_flags
-            },
+                },
             'unified_log': {
                 'data': logs_data,
                 'flags': []
+                }
             }
-        }
         report['errors'] = results.get('errors', [])
 
         return report
