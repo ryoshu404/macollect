@@ -24,6 +24,7 @@ class ReportBuilder:
         xattr_data = results.get('xattr', {}).get('data', {})
         xattr_flags = results.get('xattr', {}).get('flags', [])
         credentials_data = results.get('credentials', {}).get('data', {})
+        credentials_flags = results.get('credentials', {}).get('flags', [])
         logs_data = results.get('logs', {}).get('data', {})
         report['collection_metadata'] = {
             'macollect_version': VERSION,
@@ -60,7 +61,7 @@ class ReportBuilder:
             },
             'credential_artifacts': {
                 'data': credentials_data,
-                'flags': []
+                'flags': credentials_flags
             },
             'unified_log': {
                 'data': logs_data,
