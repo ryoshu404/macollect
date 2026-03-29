@@ -36,14 +36,14 @@ class Persistence():
                     'source': entry['source'],
                     'detail': entry['program'],
                     'reason': 'Persistence method runs from a writable location'
-                })
+                    })
             if entry['program'] and Path(entry['program']).name.startswith('.'):
                 flags.append({
                     'type': 'hidden_file',
                     'source': entry['source'],
                     'detail': entry['program'],
                     'reason': 'Program key pointing to hidden file'
-                })
+                    })
             for arg in entry['program_arguments'][0]:
                 if arg.startswith(('/tmp', '/var/tmp', '/Users/')):
                     flags.append({
@@ -51,14 +51,14 @@ class Persistence():
                         'source': entry['source'],
                         'detail': arg,
                         'reason': 'Persistence method runs from a writable location',
-                    })
+                        })
             if not entry['label']:
                 flags.append({
                     'type': 'empty_label',
                     'source': entry['source'],
                     'detail': '',
                     'reason': 'Missing or empty label field in plist'
-                })
+                    })
         for source, content in persistence['sudoers'].items():
             for line in content.split('\n'):
                 if 'NOPASSWD' in line and not line.strip().startswith('#'):
@@ -67,14 +67,14 @@ class Persistence():
                         'source': source,
                         'detail': line,
                         'reason': 'NOPASSWD entry in sudoers'
-                    })
+                        })
         if persistence['loginwindow'].get('auto_login_user'):
             flags.append({
                 'type': 'autologin_enabled',
                 'source': '/Library/Preferences/com.apple.loginwindow.plist',
                 'detail': persistence['loginwindow']['auto_login_user'],
                 'reason': 'Autologin is enabled'
-            })
+                })
         return flags
 
     def _collect_btm(self) -> str:
@@ -91,7 +91,7 @@ class Persistence():
             Path('/Library/LaunchDaemons/').glob('*.plist'),
             Path('/System/Library/LaunchDaemons/').glob('*.plist'),
             Path('/Applications/').glob('*.app/Contents/Library/LaunchDaemons/*.plist')
-        )
+            )
         for path in paths:
             entry = {}
             try:
@@ -124,7 +124,7 @@ class Persistence():
             Path('/Library/LaunchAgents/').glob('*.plist'),
             Path('/Users/').glob('*/Library/LaunchAgents/*.plist'),
             Path('/System/Library/LaunchAgents/').glob('*.plist'),
-        )
+            )
         for path in paths:
             entry = {}
             if path.parts[1] == 'Users':
@@ -200,7 +200,7 @@ class Persistence():
         paths = itertools.chain(
             [Path('/etc/sudoers')],
             Path('/private/etc/sudoers.d/').glob('*')
-        )
+            )
         for path in paths:
             if path.exists():
                 entry, content = self._read_text_file(path)
@@ -214,7 +214,7 @@ class Persistence():
             [Path('/etc/crontab')],
             Path('/var/at/tabs/').glob('*'),
             Path('/usr/lib/cron/tabs').glob('*')
-        )
+            )
         for path in paths:
             if path.exists():
                 entry, content = self._read_text_file(path)

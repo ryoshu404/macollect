@@ -67,7 +67,7 @@ class ExtendedAttributes():
                     where_result = subprocess.run(
                         ['xattr', '-p', 'com.apple.metadata.kMDItemWhereFroms', path],
                         capture_output=True, text=True, timeout=10
-                    )
+                        )
                     entry['where_froms'] = where_result.stdout.strip()
                 elif line and not line.startswith(' ') and ':' in line:
                     attr_name = line.split(':')[0].strip()

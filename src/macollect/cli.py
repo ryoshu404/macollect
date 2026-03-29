@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
         description='macollect - modular macOS forensic artifact collector for IR and TH',
         epilog='https://github.com/ryoshu404/macollect',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
+        )
     parser.add_argument('-m', '--modules', nargs='+', choices=['baseline', 'persistence',
         'processes', 'signing', 'tcc', 'xattr', 'credentials','logs'], default=None,
         help='--modules: baseline persistence processes signing tcc xattr credentials logs')
