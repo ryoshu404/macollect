@@ -44,14 +44,14 @@ class Persistence():
                     'detail': entry['program'],
                     'reason': 'Program key pointing to hidden file'
                     })
-            for arg in entry['program_arguments'][0]:
-                if arg.startswith(('/tmp', '/var/tmp', '/Users/')):
-                    flags.append({
-                        'type': 'writable_path',
-                        'source': entry['source'],
-                        'detail': arg,
-                        'reason': 'Persistence method runs from a writable location',
-                        })
+            program_args = entry['program_arguments']
+            if program_args and program_args[0].startswith(('/tmp', '/var/tmp', '/Users/')):
+                flags.append({
+                    'type': 'writable_path',
+                    'source': entry['source'],
+                    'detail': program_args[0],
+                    'reason': 'Persistence method runs from a writable location',
+                })
             if not entry['label']:
                 flags.append({
                     'type': 'empty_label',
