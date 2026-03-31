@@ -382,10 +382,10 @@ The following are documented as planned additions post v1.0:
 
 This project is part of a larger security tooling portfolio.
 
-### [Statica (complete)](https://github.com/ryoshu404/statica)
+### [Statica](https://github.com/ryoshu404/statica) (v1.0)
 Modular static analysis pipeline written in Python. Extracts file hashes, printable strings, and common indicators of compromise from arbitrary files. Natural pre-collection companion to macollect.
 
-### IOC Correlation Service (planned)
+### [gorelate](https://github.com/ryoshu404/gorelate)  (In Development)
 Threat intelligence correlation service written in Go. Future enrichment integration layer for macollect output.
 
 ### Swift ESF Telemetry Tool (planned)
