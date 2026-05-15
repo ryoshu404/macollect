@@ -139,8 +139,6 @@ macollect/
 │       │   └── unified_log.py
 │       └── formatters/
 │           └── json_formatter.py
-├── samples/
-├── tests/
 ├── README.md
 └── pyproject.toml
 ```
