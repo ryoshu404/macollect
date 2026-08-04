@@ -378,16 +378,10 @@ The following are documented as planned additions post v1.0:
 
 # Related Projects
 
-This project is part of a larger security tooling portfolio.
-
 ### [Statica](https://github.com/ryoshu404/statica) (v1.0)
 Modular static analysis pipeline written in Python. Extracts file hashes, printable strings, and common indicators of compromise from arbitrary files. Natural pre-collection companion to macollect.
 
-### [gorelate](https://github.com/ryoshu404/gorelate)  (In Development)
-Threat intelligence correlation service written in Go. Future enrichment integration layer for macollect output.
 
-### Swift ESF Telemetry Tool (planned)
-Real-time kernel event streaming companion to macollect using Apple's Endpoint Security Framework. The natural v2 evolution for environments requiring live event telemetry rather than polling-based artifact collection.
 
 ---
 
